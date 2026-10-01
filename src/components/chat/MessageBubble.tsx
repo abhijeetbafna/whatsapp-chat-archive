@@ -6,6 +6,7 @@ import {
   renderFormattedText 
 } from '../../lib/chat-utils';
 import { MediaMessagePlaceholder } from './MediaMessagePlaceholder';
+import { useTheme } from '../../context/ThemeContext';
 
 interface MessageBubbleProps {
   message: Message;
@@ -16,21 +17,27 @@ interface MessageBubbleProps {
 }
 
 export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery, isHighlighted }: MessageBubbleProps) {
+  const { settings } = useTheme();
   const timeFormatted = formatMessageTime(message.timestamp);
   const attachments = message.attachments || [];
   
   // An image is "direct" if it's the only attachment and there's no text body
   const isDirectImageWithoutText = attachments.length === 1 && attachments[0].type === 'image' && attachments[0].mediaUrl && !message.text;
 
+  // Font size styling
+  const fontSizeClass = 
+    settings.fontScale === 'sm' ? 'text-[13px] leading-[1.35]' :
+    settings.fontScale === 'lg' ? 'text-[16px] leading-[1.45]' :
+    'text-[14.5px] leading-[1.4]';
+
   // Highlight text logic
   const highlightText = (text: string) => {
     if (!searchQuery || !text) return renderFormattedText(text);
     
-    // Simplistic highlighter. For a robust app, use a proper highlighter to avoid breaking emojis or HTML.
     const parts = text.split(new RegExp(`(${searchQuery.replace(/[.*+?^${}()|[\\]\\]/g, '\\$&')})`, 'gi'));
     return parts.map((part, i) => 
       part.toLowerCase() === searchQuery.toLowerCase() ? (
-        <mark key={i} className="bg-yellow-200 text-slate-900 px-0.5 rounded">{part}</mark>
+        <mark key={i} className="bg-yellow-200 dark:bg-yellow-500/40 text-slate-900 dark:text-yellow-100 px-0.5 rounded">{part}</mark>
       ) : (
         <React.Fragment key={i}>{renderFormattedText(part)}</React.Fragment>
       )
@@ -48,13 +55,13 @@ export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery
           isDirectImageWithoutText ? 'p-1' : 'px-3 py-2'
         } ${
           isOutgoing
-            ? 'bg-[#d9fdd3] text-[#111b21] rounded-2xl rounded-tr-xs border border-[#c7e9b0]/50'
-            : 'bg-white text-[#111b21] rounded-2xl rounded-tl-xs border border-slate-100'
-        } ${isHighlighted ? 'ring-2 ring-blue-500 ring-offset-1 scale-[1.02]' : ''}`}
+            ? 'bg-[#d9fdd3] dark:bg-[#005c4b] text-[#111b21] dark:text-[#e9edef] rounded-2xl rounded-tr-xs border border-[#c7e9b0]/50 dark:border-[#025143]'
+            : 'bg-white dark:bg-[#202c33] text-[#111b21] dark:text-[#e9edef] rounded-2xl rounded-tl-xs border border-slate-100 dark:border-[#2a3942]/60'
+        } ${isHighlighted ? 'ring-2 ring-emerald-500 ring-offset-1 scale-[1.02]' : ''}`}
       >
         {/* Sender Name in Group Chats */}
         {showSenderName && message.senderName && !isOutgoing && (
-          <div className={`mb-1 text-xs ${getSenderColorClass(message.senderName)}`}>
+          <div className={`mb-1 text-xs font-semibold ${getSenderColorClass(message.senderName)}`}>
             {message.senderName}
           </div>
         )}
@@ -71,7 +78,7 @@ export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery
                     mediaSize={att.mediaSize}
                     mediaStatus={att.mediaStatus}
                     rawText={message.rawText}
-                    caption={undefined} // Since text is now handled by the bubble itself
+                    caption={undefined}
                     timestampFormatted={isDirectImageWithoutText ? timeFormatted : undefined}
                   />
                 </div>
@@ -81,7 +88,11 @@ export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery
 
         {/* Text Content */}
         {message.text && (
-          <div className={`whitespace-pre-wrap break-words text-[14.5px] leading-[1.4] select-text ${attachments.length > 0 ? 'mt-1' : ''} ${message.isDeleted ? 'italic text-[#667781]' : 'text-[#111b21]'}`}>
+          <div className={`whitespace-pre-wrap break-words select-text ${fontSizeClass} ${attachments.length > 0 ? 'mt-1' : ''} ${
+            message.isDeleted 
+              ? 'italic text-[#667781] dark:text-[#8696a0]' 
+              : 'text-[#111b21] dark:text-[#e9edef]'
+          }`}>
             {message.isDeleted && (
               <span className="inline-block align-text-bottom mr-1 opacity-70">
                 <svg viewBox="0 0 24 24" height="14" width="14" preserveAspectRatio="xMidYMid meet" className="fill-current">
@@ -97,11 +108,11 @@ export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery
         {!isDirectImageWithoutText && (
           <div className="mt-1 flex items-center justify-end gap-1">
             {message.isEdited && (
-              <span className="text-[10px] text-slate-400 font-medium select-none italic mr-1">
+              <span className="text-[10px] text-slate-400 dark:text-[#8696a0] font-medium select-none italic mr-1">
                 Edited
               </span>
             )}
-            <span className="text-[10.5px] text-slate-500 font-medium select-none">
+            <span className="text-[10.5px] text-slate-500 dark:text-[#8696a0] font-medium select-none">
               {timeFormatted}
             </span>
           </div>

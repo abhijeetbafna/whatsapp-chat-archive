@@ -1,8 +1,51 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f8fafc;
+  --foreground: #0f172a;
+
+  /* WhatsApp Light Theme Tokens */
+  --wa-app-bg: #efeae2;
+  --wa-chat-bg: #efeae2;
+  --wa-header-bg: #f0f2f5;
+  --wa-bubble-in: #ffffff;
+  --wa-bubble-out: #d9fdd3;
+  --wa-bubble-in-border: #e2e8f0;
+  --wa-bubble-out-border: #c7e9b0;
+  --wa-text-primary: #111b21;
+  --wa-text-secondary: #667781;
+  --wa-border: #e2e8f0;
+  --wa-panel-bg: #ffffff;
+  --wa-date-bg: rgba(255, 255, 255, 0.88);
+  --wa-date-text: #54656f;
+  --wa-system-bg: #fff8e5;
+  --wa-system-text: #745316;
+  --wa-system-border: #fbe5a7;
+}
+
+.dark {
+  --background: #090e11;
+  --foreground: #e9edef;
+
+  /* WhatsApp Authentic Dark Theme Tokens */
+  --wa-app-bg: #0c1317;
+  --wa-chat-bg: #0b141a;
+  --wa-header-bg: #202c33;
+  --wa-bubble-in: #202c33;
+  --wa-bubble-out: #005c4b;
+  --wa-bubble-in-border: #2a3942;
+  --wa-bubble-out-border: #025143;
+  --wa-text-primary: #e9edef;
+  --wa-text-secondary: #8696a0;
+  --wa-border: #222e35;
+  --wa-panel-bg: #111b21;
+  --wa-date-bg: rgba(24, 34, 41, 0.92);
+  --wa-date-text: #8696a0;
+  --wa-system-bg: #182229;
+  --wa-system-text: #ffd279;
+  --wa-system-border: #222e35;
 }
 
 @theme inline {
@@ -12,15 +55,18 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* WhatsApp Doodle SVG Wallpaper Background */
+.wa-wallpaper-doodle {
+  background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.04'%3E%3Cpath d='M30 40c2-5 8-8 13-6 5 2 8 8 6 13-2 5-8 8-13 6-5-2-8-8-6-13zm60 20c0-6 5-11 11-11s11 5 11 11-5 11-11 11-11-5-11-11zm90-10c4-4 10-4 14 0 4 4 4 10 0 14-4 4-10 4-14 0-4-4-4-10 0-14zm70 50c3-5 9-7 14-4 5 3 7 9 4 14-3 5-9 7-14 4-5-3-7-9-4-14zM40 160c5-3 11-1 14 4 3 5 1 11-4 14-5 3-11 1-14-4-3-5-1-11 4-14zm130-30c6 0 10 4 10 10s-4 10-10 10-10-4-10-10 4-10 10-10zm90 40c4-4 11-3 15 1 4 4 3 11-1 15-4 4-11 3-15-1-4-4-3-11 1-15zM20 250c4-4 10-4 14 0s4 10 0 14-10 4-14 0-4-10 0-14zm100 10c0-6 5-11 11-11s11 5 11 11-5 11-11 11-11-5-11-11zm110-30c5-3 11-1 14 4 3 5 1 11-4 14-5 3-11 1-14-4-3-5-1-11 4-14z'/%3E%3Cpath d='M75 110l12-6 12 6-6 12-6-12zm130 90l10-8 12 4-4 12-10-4zm-80 50l8-8 8 8-8 8-8-8zm-50-90h15v15H75z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+.dark .wa-wallpaper-doodle {
+  background-image: url("data:image/svg+xml,%3Csvg width='300' height='300' viewBox='0 0 300 300' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.035'%3E%3Cpath d='M30 40c2-5 8-8 13-6 5 2 8 8 6 13-2 5-8 8-13 6-5-2-8-8-6-13zm60 20c0-6 5-11 11-11s11 5 11 11-5 11-11 11-11-5-11-11zm90-10c4-4 10-4 14 0 4 4 4 10 0 14-4 4-10 4-14 0-4-4-4-10 0-14zm70 50c3-5 9-7 14-4 5 3 7 9 4 14-3 5-9 7-14 4-5-3-7-9-4-14zM40 160c5-3 11-1 14 4 3 5 1 11-4 14-5 3-11 1-14-4-3-5-1-11 4-14zm130-30c6 0 10 4 10 10s-4 10-10 10-10-4-10-10 4-10 10-10zm90 40c4-4 11-3 15 1 4 4 3 11-1 15-4 4-11 3-15-1-4-4-3-11 1-15zM20 250c4-4 10-4 14 0s4 10 0 14-10 4-14 0-4-10 0-14zm100 10c0-6 5-11 11-11s11 5 11 11-5 11-11 11-11-5-11-11zm110-30c5-3 11-1 14 4 3 5 1 11-4 14-5 3-11 1-14-4-3-5-1-11 4-14z'/%3E%3Cpath d='M75 110l12-6 12 6-6 12-6-12zm130 90l10-8 12 4-4 12-10-4zm-80 50l8-8 8 8-8 8-8-8zm-50-90h15v15H75z'/%3E%3C/g%3E%3C/svg%3E");
 }

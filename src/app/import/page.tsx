@@ -11,6 +11,7 @@ import { ParserPreview } from '../../components/ParserPreview';
 import { ChatViewer } from '../../components/chat/ChatViewer';
 import { saveArchive, checkDuplicateArchive } from '../../lib/storage';
 import { ChatArchiveMetadata } from '../../types/storage';
+import { ThemeToggle } from '../../components/ThemeToggle';
 
 export default function ImportPage() {
   const [isDragging, setIsDragging] = useState(false);
@@ -179,7 +180,7 @@ export default function ImportPage() {
   if (result) {
     if (viewMode === 'chat' && parsedChat) {
       return (
-        <div className="flex h-screen flex-col bg-[#e0ded8] text-slate-900 overflow-hidden">
+        <div className="flex h-screen flex-col bg-[#e0ded8] dark:bg-[#0c1317] text-slate-900 dark:text-[#e9edef] overflow-hidden transition-colors">
           <main className="flex flex-1 items-center justify-center p-0 sm:p-2 md:p-4 overflow-hidden">
             <ChatViewer
               parsedChat={parsedChat}
@@ -193,21 +194,26 @@ export default function ImportPage() {
     }
 
     return (
-      <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
-        <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
-          <div className="container mx-auto flex h-16 max-w-6xl items-center px-4 sm:px-6 lg:px-8">
-            <button 
-              onClick={handleReset}
-              className="mr-4 inline-flex items-center justify-center rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
-              aria-label="Back to upload"
-            >
-              <ArrowLeft size={20} />
-            </button>
-            <div className="flex items-center gap-2">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-500 text-white">
-                <FileArchive size={20} />
+      <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-[#0c1317] text-slate-900 dark:text-[#e9edef] transition-colors">
+        <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-[#222e35] bg-white/80 dark:bg-[#111b21]/80 backdrop-blur-md transition-colors">
+          <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center">
+              <button 
+                onClick={handleReset}
+                className="mr-4 inline-flex items-center justify-center rounded-full p-2 text-slate-500 dark:text-[#8696a0] transition-colors hover:bg-slate-100 dark:hover:bg-[#202c33] hover:text-slate-900 dark:hover:text-[#e9edef]"
+                aria-label="Back to upload"
+              >
+                <ArrowLeft size={20} />
+              </button>
+              <div className="flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
+                  <FileArchive size={20} />
+                </div>
+                <span className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e9edef]">WhatsApp Chat Archive</span>
               </div>
-              <span className="text-xl font-semibold tracking-tight text-slate-900">WhatsApp Chat Archive</span>
+            </div>
+            <div className="flex items-center gap-3">
+              <ThemeToggle />
             </div>
           </div>
         </header>
@@ -329,14 +335,14 @@ export default function ImportPage() {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-slate-50 text-slate-900">
+    <div className="flex min-h-screen flex-col bg-slate-50 dark:bg-[#0c1317] text-slate-900 dark:text-[#e9edef] transition-colors">
       {/* Navigation */}
-      <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
+      <header className="sticky top-0 z-50 w-full border-b border-slate-200 dark:border-[#222e35] bg-white/80 dark:bg-[#111b21]/80 backdrop-blur-md transition-colors">
         <div className="container mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <div className="flex items-center">
             <Link 
               href="/"
-              className="mr-4 inline-flex items-center justify-center rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+              className="mr-4 inline-flex items-center justify-center rounded-full p-2 text-slate-500 dark:text-[#8696a0] transition-colors hover:bg-slate-100 dark:hover:bg-[#202c33] hover:text-slate-900 dark:hover:text-[#e9edef]"
               aria-label="Back to home"
             >
               <ArrowLeft size={20} />
@@ -345,17 +351,18 @@ export default function ImportPage() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
                 <FileArchive size={20} />
               </div>
-              <span className="text-xl font-semibold tracking-tight text-slate-900">WhatsApp Chat Archive</span>
+              <span className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e9edef]">WhatsApp Chat Archive</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <Link
               href="/archives"
-              className="text-sm font-semibold text-slate-600 hover:text-slate-900 transition-colors"
+              className="text-sm font-semibold text-slate-600 dark:text-[#8696a0] hover:text-slate-900 dark:hover:text-[#e9edef] transition-colors"
             >
               Library
             </Link>
+            <ThemeToggle />
           </div>
         </div>
       </header>

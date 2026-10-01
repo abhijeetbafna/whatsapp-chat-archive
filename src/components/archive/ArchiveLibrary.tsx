@@ -653,16 +653,16 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
       {/* Merge Preview & Execution Modal */}
       {isMergeModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fadeIn overflow-y-auto">
-          <div className="w-full max-w-xl rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-slate-200 max-h-[90vh] flex flex-col justify-between overflow-hidden">
+          <div className="w-full max-w-xl rounded-3xl bg-white dark:bg-[#111b21] p-6 sm:p-7 shadow-2xl border border-slate-200 dark:border-[#222e35] text-slate-900 dark:text-[#e9edef] max-h-[90vh] flex flex-col justify-between overflow-hidden">
             <div>
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <div className="flex items-center gap-2 text-emerald-700">
-                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100">
-                    <Layers size={20} className="text-emerald-700" />
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#222e35]">
+                <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-950/60">
+                    <Layers size={20} className="text-emerald-700 dark:text-emerald-400" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900">Merge WhatsApp Archives</h3>
-                    <p className="text-xs text-slate-500">Combine exports into a unified chronological archive</p>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-[#e9edef]">Merge WhatsApp Archives</h3>
+                    <p className="text-xs text-slate-500 dark:text-[#8696a0]">Combine exports into a unified chronological archive</p>
                   </div>
                 </div>
 
@@ -674,32 +674,32 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                     }
                   }}
                   disabled={isMerging}
-                  className="rounded-full p-1 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+                  className="rounded-full p-1 text-slate-400 hover:bg-slate-100 dark:hover:bg-[#202c33] hover:text-slate-700 dark:hover:text-[#e9edef] transition-colors"
                 >
                   ✕
                 </button>
               </div>
 
               {isLoadingMergePreview ? (
-                <div className="py-16 text-center text-slate-500 flex flex-col items-center">
+                <div className="py-16 text-center text-slate-500 dark:text-[#8696a0] flex flex-col items-center">
                   <Loader2 size={32} className="animate-spin text-emerald-600 mb-3" />
                   <p className="text-sm font-medium">Analyzing selected archives and checking compatibility...</p>
                 </div>
               ) : mergePreview ? (
                 <div className="mt-4 space-y-4 max-h-[60vh] overflow-y-auto pr-1">
-                  {/* Compatibility Assessment Banner (Requirement 7 & 8) */}
+                  {/* Compatibility Assessment Banner */}
                   <div
                     className={`rounded-2xl p-4 border text-xs ${
                       mergePreview.compatibility.isWarning
-                        ? 'bg-amber-50/80 border-amber-200 text-amber-900'
-                        : 'bg-emerald-50/80 border-emerald-200 text-emerald-900'
+                        ? 'bg-amber-50/80 dark:bg-amber-950/40 border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-300'
+                        : 'bg-emerald-50/80 dark:bg-emerald-950/40 border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-300'
                     }`}
                   >
                     <div className="flex items-start gap-2.5">
                       {mergePreview.compatibility.isWarning ? (
-                        <AlertCircle size={18} className="text-amber-600 flex-shrink-0 mt-0.5" />
+                        <AlertCircle size={18} className="text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
                       ) : (
-                        <CheckCircle2 size={18} className="text-emerald-600 flex-shrink-0 mt-0.5" />
+                        <CheckCircle2 size={18} className="text-emerald-600 dark:text-emerald-400 flex-shrink-0 mt-0.5" />
                       )}
                       <div>
                         <p className="font-bold text-sm">{mergePreview.compatibility.title}</p>
@@ -709,7 +709,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                           ))}
                         </ul>
                         {mergePreview.compatibility.isWarning && (
-                          <p className="mt-2 font-medium text-amber-800">
+                          <p className="mt-2 font-medium text-amber-800 dark:text-amber-300">
                             You can still merge them if you are sure, but verify they belong together.
                           </p>
                         )}
@@ -719,22 +719,22 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
 
                   {/* Selected Source Archives List */}
                   <div>
-                    <p className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">
+                    <p className="text-xs font-semibold text-slate-500 dark:text-[#8696a0] uppercase tracking-wider mb-2">
                       Selected Sources (Will remain unchanged):
                     </p>
                     <div className="space-y-2">
                       {mergePreview.sourceArchives.map((src) => (
                         <div
                           key={src.id}
-                          className="flex items-center justify-between rounded-xl bg-slate-50 border border-slate-200/80 px-3.5 py-2 text-xs"
+                          className="flex items-center justify-between rounded-xl bg-slate-50 dark:bg-[#182229] border border-slate-200/80 dark:border-[#2a3942] px-3.5 py-2 text-xs"
                         >
                           <div className="min-w-0 pr-2">
-                            <span className="font-semibold text-slate-900 block truncate">{src.title}</span>
-                            <span className="text-slate-400 text-[11px]">
+                            <span className="font-semibold text-slate-900 dark:text-[#e9edef] block truncate">{src.title}</span>
+                            <span className="text-slate-400 dark:text-[#8696a0] text-[11px]">
                               {formatDateRange(src.startDate, src.endDate) || 'Dates unavailable'}
                             </span>
                           </div>
-                          <span className="font-medium text-slate-600 flex-shrink-0">
+                          <span className="font-medium text-slate-600 dark:text-[#8696a0] flex-shrink-0">
                             {src.messageCount.toLocaleString()} msgs
                           </span>
                         </div>
@@ -742,25 +742,25 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                     </div>
                   </div>
 
-                  {/* Calculated Stats Grid (Requirement 27) */}
+                  {/* Calculated Stats Grid */}
                   <div className="grid grid-cols-3 gap-2.5 text-center text-xs">
-                    <div className="rounded-xl border border-slate-100 bg-slate-50 p-2.5">
-                      <span className="text-slate-400 block text-[11px]">Original msgs</span>
-                      <span className="font-bold text-slate-900 text-sm">
+                    <div className="rounded-xl border border-slate-100 dark:border-[#2a3942] bg-slate-50 dark:bg-[#182229] p-2.5">
+                      <span className="text-slate-400 dark:text-[#8696a0] block text-[11px]">Original msgs</span>
+                      <span className="font-bold text-slate-900 dark:text-[#e9edef] text-sm">
                         {mergePreview.totalOriginalMessages.toLocaleString()}
                       </span>
                     </div>
 
-                    <div className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-2.5">
-                      <span className="text-emerald-700 block text-[11px]">Unified msgs</span>
-                      <span className="font-bold text-emerald-800 text-sm">
+                    <div className="rounded-xl border border-emerald-100 dark:border-emerald-900/40 bg-emerald-50/50 dark:bg-emerald-950/40 p-2.5">
+                      <span className="text-emerald-700 dark:text-emerald-400 block text-[11px]">Unified msgs</span>
+                      <span className="font-bold text-emerald-800 dark:text-emerald-300 text-sm">
                         {mergePreview.totalUniqueMessages.toLocaleString()}
                       </span>
                     </div>
 
-                    <div className="rounded-xl border border-blue-100 bg-blue-50/50 p-2.5">
-                      <span className="text-blue-700 block text-[11px]">Duplicates removed</span>
-                      <span className="font-bold text-blue-800 text-sm">
+                    <div className="rounded-xl border border-blue-100 dark:border-blue-900/40 bg-blue-50/50 dark:bg-blue-950/40 p-2.5">
+                      <span className="text-blue-700 dark:text-blue-400 block text-[11px]">Duplicates removed</span>
+                      <span className="font-bold text-blue-800 dark:text-blue-300 text-sm">
                         {mergePreview.duplicateCount.toLocaleString()}
                       </span>
                     </div>
@@ -768,7 +768,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
 
                   {/* New Merged Archive Title Input */}
                   <div>
-                    <label className="block text-xs font-semibold text-slate-700 mb-1">
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-[#e9edef] mb-1">
                       New Unified Archive Title:
                     </label>
                     <input
@@ -777,17 +777,17 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                       onChange={(e) => setMergedCustomTitle(e.target.value)}
                       placeholder="e.g. Project Chat — Merged"
                       disabled={isMerging}
-                      className="w-full rounded-xl border border-slate-300 px-3.5 py-2 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 disabled:opacity-50"
+                      className="w-full rounded-xl border border-slate-300 dark:border-[#2a3942] bg-white dark:bg-[#182229] px-3.5 py-2 text-sm text-slate-900 dark:text-[#e9edef] focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500 disabled:opacity-50"
                     />
-                    <p className="text-[11px] text-slate-400 mt-1">
+                    <p className="text-[11px] text-slate-400 dark:text-[#8696a0] mt-1">
                       Source archives will be preserved intact. A new unified archive will be created.
                     </p>
                   </div>
 
                   {/* Progress status during merge */}
                   {isMerging && (
-                    <div className="flex items-center gap-2 rounded-xl bg-blue-50 border border-blue-200 px-3.5 py-2.5 text-xs text-blue-800">
-                      <Loader2 size={14} className="animate-spin text-blue-600 flex-shrink-0" />
+                    <div className="flex items-center gap-2 rounded-xl bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800 px-3.5 py-2.5 text-xs text-blue-800 dark:text-blue-300">
+                      <Loader2 size={14} className="animate-spin text-blue-600 dark:text-blue-400 flex-shrink-0" />
                       <span>{mergeProgress}</span>
                     </div>
                   )}
@@ -796,7 +796,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
             </div>
 
             {/* Modal Actions */}
-            <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-[#222e35] flex items-center justify-between">
               <button
                 type="button"
                 onClick={() => {
@@ -804,7 +804,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                   setMergePreview(null);
                 }}
                 disabled={isMerging}
-                className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                className="rounded-xl border border-slate-300 dark:border-[#2a3942] px-4 py-2 text-xs font-medium text-slate-700 dark:text-[#e9edef] hover:bg-slate-50 dark:hover:bg-[#202c33] transition-colors"
               >
                 Cancel
               </button>
@@ -839,9 +839,9 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
       {/* Rename Modal */}
       {editingArchive && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-slate-200">
-            <h3 className="text-lg font-bold text-slate-900">Rename Archive</h3>
-            <p className="text-xs text-slate-500 mt-1">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-[#111b21] p-6 shadow-xl border border-slate-200 dark:border-[#222e35] text-slate-900 dark:text-[#e9edef]">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-[#e9edef]">Rename Archive</h3>
+            <p className="text-xs text-slate-500 dark:text-[#8696a0] mt-1">
               Change the display title of this archive. Message timestamps, senders, and media are completely preserved.
             </p>
 
@@ -852,7 +852,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                 onChange={(e) => setNewTitle(e.target.value)}
                 autoFocus
                 placeholder="Enter archive title"
-                className="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm text-slate-900 focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                className="w-full rounded-xl border border-slate-300 dark:border-[#2a3942] bg-white dark:bg-[#202c33] px-3.5 py-2.5 text-sm text-slate-900 dark:text-[#e9edef] focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
               />
 
               <div className="mt-5 flex justify-end gap-2.5">
@@ -860,7 +860,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                   type="button"
                   onClick={() => setEditingArchive(null)}
                   disabled={isRenaming}
-                  className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  className="rounded-xl border border-slate-300 dark:border-[#2a3942] px-4 py-2 text-sm font-medium text-slate-700 dark:text-[#e9edef] hover:bg-slate-50 dark:hover:bg-[#202c33] transition-colors"
                 >
                   Cancel
                 </button>
@@ -878,18 +878,18 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
         </div>
       )}
 
-      {/* Delete Confirmation Modal (Requirement 13 & 14) */}
+      {/* Delete Confirmation Modal */}
       {deletingArchive && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-slate-200">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 text-red-600 mb-4">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-[#111b21] p-6 shadow-xl border border-slate-200 dark:border-[#222e35] text-slate-900 dark:text-[#e9edef]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-950/60 text-red-600 dark:text-red-400 mb-4">
               <Trash2 size={24} />
             </div>
-            <h3 className="text-lg font-bold text-slate-900">Delete archive?</h3>
-            <p className="text-sm text-slate-600 mt-2">
-              This will permanently remove <span className="font-semibold text-slate-900">&ldquo;{deletingArchive.title}&rdquo;</span> and its locally stored media from this browser.
+            <h3 className="text-lg font-bold text-slate-900 dark:text-[#e9edef]">Delete archive?</h3>
+            <p className="text-sm text-slate-600 dark:text-[#8696a0] mt-2">
+              This will permanently remove <span className="font-semibold text-slate-900 dark:text-[#e9edef]">&ldquo;{deletingArchive.title}&rdquo;</span> and its locally stored media from this browser.
             </p>
-            <p className="text-xs text-slate-400 mt-2">
+            <p className="text-xs text-slate-400 dark:text-slate-500 mt-2">
               No files will be left behind. This action cannot be undone.
             </p>
 
@@ -898,7 +898,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                 type="button"
                 onClick={() => setDeletingArchive(null)}
                 disabled={isDeleting}
-                className="rounded-xl border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                className="rounded-xl border border-slate-300 dark:border-[#2a3942] px-4 py-2 text-sm font-medium text-slate-700 dark:text-[#e9edef] hover:bg-slate-50 dark:hover:bg-[#202c33] transition-colors"
               >
                 Cancel
               </button>
@@ -916,19 +916,19 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
         </div>
       )}
 
-      {/* Backup Collision Modal (Requirement 31) */}
+      {/* Backup Collision Modal */}
       {collisionInfo && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-fadeIn">
-          <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-slate-200">
-            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 text-amber-600 mb-4">
+          <div className="w-full max-w-md rounded-2xl bg-white dark:bg-[#111b21] p-6 shadow-xl border border-slate-200 dark:border-[#222e35] text-slate-900 dark:text-[#e9edef]">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/60 text-amber-600 dark:text-amber-400 mb-4">
               <AlertCircle size={24} />
             </div>
-            <h3 className="text-lg font-bold text-slate-900">Archive Already Exists</h3>
-            <p className="text-sm text-slate-600 mt-2">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-[#e9edef]">Archive Already Exists</h3>
+            <p className="text-sm text-slate-600 dark:text-[#8696a0] mt-2">
               An archive with this identity already exists in your local storage:{' '}
-              <span className="font-semibold text-slate-900">&ldquo;{collisionInfo.title}&rdquo;</span>.
+              <span className="font-semibold text-slate-900 dark:text-[#e9edef]">&ldquo;{collisionInfo.title}&rdquo;</span>.
             </p>
-            <p className="text-xs text-slate-500 mt-2">
+            <p className="text-xs text-slate-500 dark:text-[#8696a0] mt-2">
               How would you like to proceed with this backup restore?
             </p>
 
@@ -943,7 +943,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
               <button
                 type="button"
                 onClick={() => handleResolveCollision('replace')}
-                className="w-full rounded-xl border border-amber-300 bg-amber-50 px-4 py-2.5 text-sm font-semibold text-amber-800 hover:bg-amber-100 transition-colors"
+                className="w-full rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50 dark:bg-amber-950/40 px-4 py-2.5 text-sm font-semibold text-amber-800 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors"
               >
                 Replace Existing Archive
               </button>
@@ -953,7 +953,7 @@ export function ArchiveLibrary({ onOpenArchive, onRefreshList }: ArchiveLibraryP
                   setCollisionInfo(null);
                   setCollisionFile(null);
                 }}
-                className="w-full rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                className="w-full rounded-xl border border-slate-300 dark:border-[#2a3942] bg-white dark:bg-[#202c33] px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-[#e9edef] hover:bg-slate-50 dark:hover:bg-[#2a3942] transition-colors"
               >
                 Cancel
               </button>

@@ -5,6 +5,7 @@ import { DateSeparator } from './DateSeparator';
 import { SystemMessage } from './SystemMessage';
 import { MessageBubble } from './MessageBubble';
 import { ArrowDown, MessageSquare } from 'lucide-react';
+import { useTheme } from '../../context/ThemeContext';
 
 interface MessageListProps {
   messages: Message[];
@@ -18,6 +19,7 @@ const INITIAL_CHUNK_SIZE = 500;
 const LOAD_MORE_STEP = 500;
 
 export function MessageList({ messages, isGroup, mySenderName, highlightMessageId, searchQuery }: MessageListProps) {
+  const { settings, isDark } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomAnchorRef = useRef<HTMLDivElement>(null);
   const [showScrollBottom, setShowScrollBottom] = useState(false);
@@ -26,8 +28,6 @@ export function MessageList({ messages, isGroup, mySenderName, highlightMessageI
   );
 
   // When messages array changes (e.g. new file loaded), reset visible count
-  // Instead of an effect, we can use a ref or derived state if we wanted, but to fix lint:
-  // just disable the warning or handle it cleanly.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -100,14 +100,40 @@ export function MessageList({ messages, isGroup, mySenderName, highlightMessageI
     setVisibleCount(messages.length);
   };
 
+  // Compute wallpaper styling
+  const wallpaperStyle = useMemo(() => {
+    if (settings.wallpaper === 'solid') {
+      return {
+        backgroundColor: isDark ? '#0b141a' : '#f8fafc',
+      };
+    }
+    if (settings.wallpaper === 'slate') {
+      return {
+        backgroundColor: isDark ? '#0f172a' : '#e2e8f0',
+      };
+    }
+    if (settings.wallpaper === 'dots') {
+      const dotColor = isDark ? '#1f2c34' : '#dcd5ca';
+      return {
+        backgroundColor: isDark ? '#0b141a' : '#efeae2',
+        backgroundImage: `radial-gradient(${dotColor} 0.75px, transparent 0.75px)`,
+        backgroundSize: '13px 13px',
+      };
+    }
+    // Default: authentic WhatsApp doodle wallpaper
+    return {
+      backgroundColor: isDark ? '#0b141a' : '#efeae2',
+    };
+  }, [settings.wallpaper, isDark]);
+
   if (messages.length === 0) {
     return (
-      <div className="flex flex-1 flex-col items-center justify-center p-8 text-center text-slate-500">
-        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+      <div className="flex flex-1 flex-col items-center justify-center p-8 text-center text-slate-500 dark:text-[#8696a0]">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-slate-100 dark:bg-[#202c33] text-slate-400 dark:text-[#8696a0]">
           <MessageSquare size={32} />
         </div>
-        <h3 className="text-lg font-semibold text-slate-800">No messages in this conversation</h3>
-        <p className="mt-1 text-sm text-slate-500 max-w-sm">
+        <h3 className="text-lg font-semibold text-slate-800 dark:text-[#e9edef]">No messages in this conversation</h3>
+        <p className="mt-1 text-sm text-slate-500 dark:text-[#8696a0] max-w-sm">
           This archive does not contain any readable messages or text.
         </p>
       </div>
@@ -118,25 +144,23 @@ export function MessageList({ messages, isGroup, mySenderName, highlightMessageI
     <div
       ref={containerRef}
       onScroll={handleScroll}
-      className="relative flex-1 overflow-y-auto px-2 py-3 sm:px-4 md:px-6 space-y-1 select-text"
-      style={{
-        backgroundColor: '#efeae2',
-        backgroundImage: `radial-gradient(#dcd5ca 0.65px, transparent 0.65px)`,
-        backgroundSize: '13px 13px',
-      }}
+      className={`relative flex-1 overflow-y-auto px-2 py-3 sm:px-4 md:px-6 space-y-1 select-text transition-colors ${
+        settings.wallpaper === 'default' ? 'wa-wallpaper-doodle' : ''
+      }`}
+      style={wallpaperStyle}
     >
       {/* Load Earlier Messages Banner */}
       {hasEarlierMessages && (
         <div className="flex flex-col items-center justify-center gap-1.5 py-2.5">
           <button
             onClick={() => setVisibleCount((prev) => Math.min(messages.length, prev + LOAD_MORE_STEP))}
-            className="rounded-full bg-white/95 px-4 py-1.5 text-xs font-semibold text-slate-700 shadow-xs border border-slate-300/70 hover:bg-white hover:text-slate-900 transition-all"
+            className="rounded-full bg-white/95 dark:bg-[#202c33]/95 px-4 py-1.5 text-xs font-semibold text-slate-700 dark:text-[#e9edef] shadow-xs border border-slate-300/70 dark:border-[#2a3942] hover:bg-white dark:hover:bg-[#2a3942] hover:text-slate-900 dark:hover:text-white transition-all"
           >
             Load Earlier Messages ({messages.length - visibleCount} remaining)
           </button>
           <button
             onClick={handleLoadAll}
-            className="text-[11px] text-slate-600 hover:text-slate-900 underline font-medium"
+            className="text-[11px] text-slate-600 dark:text-[#8696a0] hover:text-slate-900 dark:hover:text-white underline font-medium"
           >
             Load all {messages.length.toLocaleString()} messages
           </button>
@@ -178,7 +202,7 @@ export function MessageList({ messages, isGroup, mySenderName, highlightMessageI
         <button
           onClick={scrollToBottom}
           aria-label="Scroll to latest messages"
-          className="fixed bottom-6 right-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-700 shadow-md border border-slate-200/80 hover:bg-slate-50 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all transform hover:scale-105"
+          className="fixed bottom-6 right-6 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white dark:bg-[#202c33] text-slate-700 dark:text-[#e9edef] shadow-md border border-slate-200/80 dark:border-[#2a3942] hover:bg-slate-50 dark:hover:bg-[#2a3942] hover:text-slate-900 dark:hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 transition-all transform hover:scale-105"
         >
           <ArrowDown size={17} />
         </button>
