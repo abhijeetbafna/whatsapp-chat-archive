@@ -15,19 +15,25 @@ export function getSafeFilename(title: string | null): string {
 }
 
 export function filterMessagesByDate(messages: Message[], options: ExportOptions): Message[] {
-  if (options.dateRange !== 'custom') {
-    return messages;
-  }
-  
-  const start = new Date(options.fromDate);
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(options.toDate);
-  end.setHours(23, 59, 59, 999);
+  let filtered = messages;
 
-  return messages.filter((msg) => {
-    const msgDate = new Date(msg.timestamp);
-    return msgDate >= start && msgDate <= end;
-  });
+  if (options.dateRange === 'custom') {
+    const start = new Date(options.fromDate);
+    start.setHours(0, 0, 0, 0);
+    const end = new Date(options.toDate);
+    end.setHours(23, 59, 59, 999);
+
+    filtered = filtered.filter((msg) => {
+      const msgDate = new Date(msg.timestamp);
+      return msgDate >= start && msgDate <= end;
+    });
+  }
+
+  if (options.starredOnly) {
+    filtered = filtered.filter((msg) => msg.isStarred);
+  }
+
+  return filtered;
 }
 
 const blobToBase64 = async (blobUrl: string, expectedMime?: string, originalFileName?: string): Promise<string> => {

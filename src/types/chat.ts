@@ -38,6 +38,7 @@ export interface Message {
   attachments: Attachment[]; // Array of attachments instead of single fields
   isEdited?: boolean;
   isDeleted?: boolean;
+  isStarred?: boolean;
   isSystemMessage: boolean;
   rawText?: string;
   sourceArchiveId?: string;

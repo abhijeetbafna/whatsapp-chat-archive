@@ -10,7 +10,8 @@ import {
   Search as SearchIcon,
   Info,
   Download,
-  Sliders
+  Sliders,
+  Star
 } from 'lucide-react';
 
 interface ChatHeaderProps {
@@ -22,10 +23,13 @@ interface ChatHeaderProps {
   onSwitchToPreview?: () => void;
   onToggleSearch: () => void;
   onToggleInfo: () => void;
+  onToggleStarred: () => void;
   onToggleThemeSettings: () => void;
   onExportClick: () => void;
   isSearchOpen: boolean;
   isInfoOpen: boolean;
+  isStarredOpen: boolean;
+  starredCount: number;
 }
 
 export function ChatHeader({
@@ -37,10 +41,13 @@ export function ChatHeader({
   onSwitchToPreview,
   onToggleSearch,
   onToggleInfo,
+  onToggleStarred,
   onToggleThemeSettings,
   onExportClick,
   isSearchOpen,
   isInfoOpen,
+  isStarredOpen,
+  starredCount,
 }: ChatHeaderProps) {
   const isGroup = parsedChat.participants.length > 2;
   const title = getChatTitle(parsedChat, fallbackFileName);
@@ -93,6 +100,27 @@ export function ChatHeader({
         >
           <SearchIcon size={14} />
           <span className="hidden md:inline">Search</span>
+        </button>
+
+        {/* Starred Messages Drawer Toggle */}
+        <button
+          onClick={onToggleStarred}
+          className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1.5 text-xs font-semibold shadow-2xs transition-colors ${
+            isStarredOpen
+              ? 'bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950/70 dark:text-amber-300 dark:border-amber-700'
+              : starredCount > 0
+              ? 'bg-amber-50 text-amber-800 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800/60 hover:bg-amber-100 dark:hover:bg-amber-950/70'
+              : 'bg-white dark:bg-[#111b21] text-slate-700 dark:text-[#e9edef] border border-slate-300/80 dark:border-[#222e35] hover:bg-slate-50 dark:hover:bg-[#2a3942]'
+          }`}
+          title={starredCount > 0 ? `${starredCount} Starred Message${starredCount !== 1 ? 's' : ''}` : 'Starred Messages'}
+          aria-label="Open Starred Messages Drawer"
+        >
+          <Star size={14} className={starredCount > 0 || isStarredOpen ? 'fill-amber-500 text-amber-500' : ''} />
+          {starredCount > 0 && (
+            <span className="text-[11px] font-bold text-amber-700 dark:text-amber-300">
+              {starredCount}
+            </span>
+          )}
         </button>
 
         {/* "My Messages / Outgoing" Selector */}

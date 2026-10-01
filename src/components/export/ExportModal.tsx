@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, FileText, Loader2, AlertCircle } from 'lucide-react';
+import { X, FileText, Loader2, AlertCircle, Star } from 'lucide-react';
 import { ParsedChat } from '../../types/chat';
 
 export interface ExportOptions {
@@ -8,6 +8,7 @@ export interface ExportOptions {
   toDate: string;
   includeImages: boolean;
   includeConversationInfo: boolean;
+  starredOnly?: boolean;
 }
 
 interface ExportModalProps {
@@ -15,35 +16,35 @@ interface ExportModalProps {
   isOpen: boolean;
   onClose: () => void;
   onExport: (options: ExportOptions) => Promise<void>;
+  initialStarredOnly?: boolean;
 }
 
-export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProps) {
+export function ExportModal({ chat, isOpen, onClose, onExport, initialStarredOnly = false }: ExportModalProps) {
   const [dateRange, setDateRange] = useState<'all' | 'custom'>('all');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
   const [includeImages, setIncludeImages] = useState(true);
   const [includeInfo, setIncludeInfo] = useState(true);
+  const [starredOnly, setStarredOnly] = useState(initialStarredOnly);
   
   const [isExporting, setIsExporting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const starredCount = chat.messages.filter((m) => m.isStarred).length;
 
   // Initialize dates to bounds of chat
   useEffect(() => {
     if (chat.messages.length > 0 && isOpen) {
       const firstDate = new Date(chat.messages[0].timestamp).toISOString().split('T')[0];
       const lastDate = new Date(chat.messages[chat.messages.length - 1].timestamp).toISOString().split('T')[0];
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFromDate(firstDate);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setToDate(lastDate);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setError(null);
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDateRange('all');
-      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setStarredOnly(initialStarredOnly);
       setIsExporting(false);
     }
-  }, [chat, isOpen]);
+  }, [chat, isOpen, initialStarredOnly]);
 
   if (!isOpen) return null;
 
@@ -76,6 +77,11 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
       }
     }
 
+    if (starredOnly && starredCount === 0) {
+      setError('No starred messages found in this chat to export.');
+      return;
+    }
+
     setIsExporting(true);
     try {
       await onExport({
@@ -83,7 +89,8 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
         fromDate,
         toDate,
         includeImages,
-        includeConversationInfo: includeInfo
+        includeConversationInfo: includeInfo,
+        starredOnly,
       });
       onClose(); // Close on success
     } catch (err: any) {
@@ -97,21 +104,21 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
       <div 
-        className="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        className="w-full max-w-md bg-white dark:bg-[#111b21] rounded-2xl shadow-2xl overflow-hidden flex flex-col border border-transparent dark:border-[#222e35]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50/80">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-[#222e35] bg-slate-50/80 dark:bg-[#202c33]">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-blue-100 text-blue-700 rounded-lg">
+            <div className="p-1.5 bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 rounded-lg">
               <FileText size={18} />
             </div>
-            <h2 className="text-base font-semibold text-slate-800">Export PDF Archive</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-[#e9edef]">Export PDF Archive</h2>
           </div>
           <button
             onClick={onClose}
             disabled={isExporting}
-            className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-full transition-colors disabled:opacity-50"
+            className="p-1.5 text-slate-400 hover:text-slate-600 dark:hover:text-[#e9edef] hover:bg-slate-200 dark:hover:bg-[#2a3942] rounded-full transition-colors disabled:opacity-50"
           >
             <X size={18} />
           </button>
@@ -120,15 +127,39 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
         {/* Body */}
         <div className="p-5 flex flex-col gap-5">
           {error && (
-            <div className="flex items-start gap-2 bg-red-50 text-red-700 p-3 rounded-xl border border-red-100 text-sm">
+            <div className="flex items-start gap-2 bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 p-3 rounded-xl border border-red-100 dark:border-red-900/50 text-sm">
               <AlertCircle size={16} className="shrink-0 mt-0.5" />
               <p>{error}</p>
             </div>
           )}
 
+          {/* Starred Messages Filter Option */}
+          {starredCount > 0 && (
+            <div className="p-3 bg-amber-50/80 dark:bg-amber-950/30 rounded-xl border border-amber-200/80 dark:border-amber-800/40">
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={starredOnly} 
+                  onChange={(e) => setStarredOnly(e.target.checked)}
+                  disabled={isExporting}
+                  className="mt-1 w-4 h-4 rounded text-amber-500 border-amber-300 focus:ring-amber-500 disabled:opacity-50"
+                />
+                <div className="flex flex-col">
+                  <span className="text-sm font-semibold text-slate-800 dark:text-[#e9edef] flex items-center gap-1.5">
+                    <Star size={13} className="fill-amber-500 text-amber-500" />
+                    <span>Export Starred Messages Only ({starredCount})</span>
+                  </span>
+                  <span className="text-[12px] text-slate-500 dark:text-[#8696a0]">
+                    Only include bookmarked messages in the exported PDF document.
+                  </span>
+                </div>
+              </label>
+            </div>
+          )}
+
           {/* Date Range Options */}
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-slate-800">Date Range</h3>
+            <h3 className="text-sm font-semibold text-slate-800 dark:text-[#e9edef]">Date Range</h3>
             <div className="flex flex-col gap-2">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input 
@@ -140,7 +171,7 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
                   disabled={isExporting}
                   className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
                 />
-                <span className="text-sm text-slate-700">Entire conversation</span>
+                <span className="text-sm text-slate-700 dark:text-[#e9edef]">Entire conversation</span>
               </label>
               <label className="flex items-center gap-2 cursor-pointer">
                 <input 
@@ -152,31 +183,31 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
                   disabled={isExporting}
                   className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
                 />
-                <span className="text-sm text-slate-700">Custom date range</span>
+                <span className="text-sm text-slate-700 dark:text-[#e9edef]">Custom date range</span>
               </label>
             </div>
             
             {/* Custom Date Pickers */}
             {dateRange === 'custom' && (
-              <div className="flex items-center gap-3 mt-2 ml-6 p-3 bg-slate-50 rounded-xl border border-slate-100">
+              <div className="flex items-center gap-3 mt-2 ml-6 p-3 bg-slate-50 dark:bg-[#202c33] rounded-xl border border-slate-100 dark:border-[#2a3942]">
                 <div className="flex flex-col flex-1">
-                  <label className="text-[11px] font-medium text-slate-500 mb-1 uppercase tracking-wider">From</label>
+                  <label className="text-[11px] font-medium text-slate-500 dark:text-[#8696a0] mb-1 uppercase tracking-wider">From</label>
                   <input 
                     type="date" 
                     value={fromDate} 
                     onChange={(e) => setFromDate(e.target.value)}
                     disabled={isExporting}
-                    className="w-full text-sm rounded-lg border border-slate-300 py-1.5 px-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50"
+                    className="w-full text-sm rounded-lg border border-slate-300 dark:border-[#2a3942] bg-white dark:bg-[#111b21] text-slate-800 dark:text-[#e9edef] py-1.5 px-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50"
                   />
                 </div>
                 <div className="flex flex-col flex-1">
-                  <label className="text-[11px] font-medium text-slate-500 mb-1 uppercase tracking-wider">To</label>
+                  <label className="text-[11px] font-medium text-slate-500 dark:text-[#8696a0] mb-1 uppercase tracking-wider">To</label>
                   <input 
                     type="date" 
                     value={toDate} 
                     onChange={(e) => setToDate(e.target.value)}
                     disabled={isExporting}
-                    className="w-full text-sm rounded-lg border border-slate-300 py-1.5 px-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50"
+                    className="w-full text-sm rounded-lg border border-slate-300 dark:border-[#2a3942] bg-white dark:bg-[#111b21] text-slate-800 dark:text-[#e9edef] py-1.5 px-2 focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 disabled:opacity-50"
                   />
                 </div>
               </div>
@@ -185,7 +216,7 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
 
           {/* Content Options */}
           <div className="space-y-3 pt-2">
-             <h3 className="text-sm font-semibold text-slate-800">Content Options</h3>
+             <h3 className="text-sm font-semibold text-slate-800 dark:text-[#e9edef]">Content Options</h3>
              <label className="flex items-start gap-3 cursor-pointer">
                 <input 
                   type="checkbox" 
@@ -195,8 +226,8 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
                   className="mt-1 w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500 disabled:opacity-50"
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium text-slate-700">Conversation Information</span>
-                  <span className="text-[12px] text-slate-500">Include a cover page with participants, dates, and archive statistics.</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-[#e9edef]">Conversation Information</span>
+                  <span className="text-[12px] text-slate-500 dark:text-[#8696a0]">Include a cover page with participants, dates, and archive statistics.</span>
                 </div>
              </label>
              <label className="flex items-start gap-3 cursor-pointer">
@@ -208,19 +239,19 @@ export function ExportModal({ chat, isOpen, onClose, onExport }: ExportModalProp
                   className="mt-1 w-4 h-4 rounded text-emerald-600 border-slate-300 focus:ring-emerald-500 disabled:opacity-50"
                 />
                 <div className="flex flex-col">
-                  <span className="text-sm font-medium text-slate-700">Include Images</span>
-                  <span className="text-[12px] text-slate-500">Embed photos directly in the PDF. Video and audio are always represented as text tags.</span>
+                  <span className="text-sm font-medium text-slate-700 dark:text-[#e9edef]">Include Images</span>
+                  <span className="text-[12px] text-slate-500 dark:text-[#8696a0]">Embed photos directly in the PDF. Video and audio are always represented as text tags.</span>
                 </div>
              </label>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="px-5 py-4 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+        <div className="px-5 py-4 border-t border-slate-100 dark:border-[#222e35] bg-slate-50 dark:bg-[#202c33] flex justify-end gap-3">
           <button
             onClick={onClose}
             disabled={isExporting}
-            className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 hover:bg-slate-200 transition-colors disabled:opacity-50"
+            className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-[#8696a0] hover:bg-slate-200 dark:hover:bg-[#2a3942] dark:hover:text-[#e9edef] transition-colors disabled:opacity-50"
           >
             Cancel
           </button>

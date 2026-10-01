@@ -20,6 +20,7 @@ function sanitizeMessageForStorage(msg: Message, archiveId: string): Message {
     chatId: archiveId,
     sourceArchiveId: msg.sourceArchiveId,
     sourceMessageId: msg.sourceMessageId,
+    isStarred: Boolean(msg.isStarred),
     attachments: (msg.attachments || []).map((att) => ({
       type: att.type,
       fileName: att.fileName,
@@ -360,3 +361,60 @@ export async function deleteArchive(archiveId: string): Promise<void> {
     request.onerror = () => reject(request.error);
   });
 }
+
+/**
+ * Toggles or sets the starred status of a message in IndexedDB.
+ */
+export async function toggleMessageStarred(
+  archiveId: string,
+  messageId: string,
+  forceStarred?: boolean
+): Promise<boolean> {
+  const db = await getDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([STORES.MESSAGES], 'readwrite');
+    const store = transaction.objectStore(STORES.MESSAGES);
+    const request = store.get(messageId);
+
+    request.onsuccess = () => {
+      const msg: Message | undefined = request.result;
+      if (!msg) {
+        resolve(false);
+        return;
+      }
+      const newStatus = forceStarred !== undefined ? forceStarred : !msg.isStarred;
+      msg.isStarred = newStatus;
+      const putRequest = store.put(msg);
+      putRequest.onsuccess = () => resolve(newStatus);
+      putRequest.onerror = () => reject(putRequest.error || new Error('Failed to update message star status'));
+    };
+
+    request.onerror = () => {
+      reject(request.error || new Error('Failed to retrieve message for starring'));
+    };
+  });
+}
+
+/**
+ * Retrieves all starred messages for a given archive from IndexedDB.
+ */
+export async function getStarredMessages(archiveId: string): Promise<Message[]> {
+  const db = await getDb();
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction([STORES.MESSAGES], 'readonly');
+    const store = transaction.objectStore(STORES.MESSAGES);
+    const index = store.index('chatId');
+    const request = index.getAll(archiveId);
+
+    request.onsuccess = () => {
+      const all: Message[] = request.result || [];
+      const starred = all.filter((m) => m.isStarred);
+      resolve(starred);
+    };
+
+    request.onerror = () => {
+      reject(request.error || new Error('Failed to load starred messages'));
+    };
+  });
+}
+

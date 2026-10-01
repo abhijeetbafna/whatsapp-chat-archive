@@ -13,12 +13,13 @@ interface MessageListProps {
   mySenderName: string | null;
   highlightMessageId?: string;
   searchQuery?: string;
+  onToggleStar?: (messageId: string) => void;
 }
 
 const INITIAL_CHUNK_SIZE = 500;
 const LOAD_MORE_STEP = 500;
 
-export function MessageList({ messages, isGroup, mySenderName, highlightMessageId, searchQuery }: MessageListProps) {
+export function MessageList({ messages, isGroup, mySenderName, highlightMessageId, searchQuery, onToggleStar }: MessageListProps) {
   const { settings, isDark } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
   const bottomAnchorRef = useRef<HTMLDivElement>(null);
@@ -188,6 +189,7 @@ export function MessageList({ messages, isGroup, mySenderName, highlightMessageI
                   showSenderName={isGroup}
                   searchQuery={searchQuery}
                   isHighlighted={highlightMessageId === msg.id}
+                  onToggleStar={onToggleStar}
                 />
               </div>
             );

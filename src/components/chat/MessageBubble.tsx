@@ -7,6 +7,7 @@ import {
 } from '../../lib/chat-utils';
 import { MediaMessagePlaceholder } from './MediaMessagePlaceholder';
 import { useTheme } from '../../context/ThemeContext';
+import { Star } from 'lucide-react';
 
 interface MessageBubbleProps {
   message: Message;
@@ -14,9 +15,10 @@ interface MessageBubbleProps {
   showSenderName: boolean;
   searchQuery?: string;
   isHighlighted?: boolean;
+  onToggleStar?: (messageId: string) => void;
 }
 
-export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery, isHighlighted }: MessageBubbleProps) {
+export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery, isHighlighted, onToggleStar }: MessageBubbleProps) {
   const { settings } = useTheme();
   const timeFormatted = formatMessageTime(message.timestamp);
   const attachments = message.attachments || [];
@@ -51,7 +53,7 @@ export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery
       }`}
     >
       <div
-        className={`relative max-w-[88%] sm:max-w-[72%] md:max-w-[62%] transition-all shadow-[0_1px_0.5px_rgba(11,20,26,0.12)] ${
+        className={`group relative max-w-[88%] sm:max-w-[72%] md:max-w-[62%] transition-all shadow-[0_1px_0.5px_rgba(11,20,26,0.12)] ${
           isDirectImageWithoutText ? 'p-1' : 'px-3 py-2'
         } ${
           isOutgoing
@@ -59,6 +61,25 @@ export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery
             : 'bg-white dark:bg-[#202c33] text-[#111b21] dark:text-[#e9edef] rounded-2xl rounded-tl-xs border border-slate-100 dark:border-[#2a3942]/60'
         } ${isHighlighted ? 'ring-2 ring-emerald-500 ring-offset-1 scale-[1.02]' : ''}`}
       >
+        {/* Direct image star action button */}
+        {isDirectImageWithoutText && onToggleStar && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleStar(message.id);
+            }}
+            className={`absolute top-2 right-2 z-10 p-1.5 rounded-full bg-black/50 text-white backdrop-blur-xs transition-all ${
+              message.isStarred
+                ? 'opacity-100 text-amber-400'
+                : 'opacity-0 group-hover:opacity-90 hover:opacity-100 hover:text-amber-400'
+            }`}
+            title={message.isStarred ? 'Unstar message' : 'Star message'}
+            aria-label={message.isStarred ? 'Unstar message' : 'Star message'}
+          >
+            <Star size={13} className={message.isStarred ? 'fill-amber-400' : ''} />
+          </button>
+        )}
+
         {/* Sender Name in Group Chats */}
         {showSenderName && message.senderName && !isOutgoing && (
           <div className={`mb-1 text-xs font-semibold ${getSenderColorClass(message.senderName)}`}>
@@ -104,17 +125,39 @@ export function MessageBubble({ message, isOutgoing, showSenderName, searchQuery
           </div>
         )}
 
-        {/* Timestamp & Edited status */}
+        {/* Timestamp, Star indicator, Edited status & Star action button */}
         {!isDirectImageWithoutText && (
-          <div className="mt-1 flex items-center justify-end gap-1">
+          <div className="mt-1 flex items-center justify-end gap-1.5">
             {message.isEdited && (
-              <span className="text-[10px] text-slate-400 dark:text-[#8696a0] font-medium select-none italic mr-1">
+              <span className="text-[10px] text-slate-400 dark:text-[#8696a0] font-medium select-none italic mr-0.5">
                 Edited
+              </span>
+            )}
+            {message.isStarred && (
+              <span title="Starred message" className="inline-flex items-center text-amber-500">
+                <Star size={11} className="fill-amber-500" />
               </span>
             )}
             <span className="text-[10.5px] text-slate-500 dark:text-[#8696a0] font-medium select-none">
               {timeFormatted}
             </span>
+            {onToggleStar && !message.isDeleted && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleStar(message.id);
+                }}
+                className={`transition-all duration-150 p-0.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 ${
+                  message.isStarred
+                    ? 'opacity-80 hover:opacity-100 text-amber-500'
+                    : 'opacity-0 group-hover:opacity-70 hover:opacity-100 text-slate-400 dark:text-slate-400 hover:text-amber-500'
+                }`}
+                title={message.isStarred ? 'Unstar message' : 'Star message'}
+                aria-label={message.isStarred ? 'Unstar message' : 'Star message'}
+              >
+                <Star size={12} className={message.isStarred ? 'fill-amber-500' : ''} />
+              </button>
+            )}
           </div>
         )}
       </div>
