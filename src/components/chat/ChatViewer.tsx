@@ -9,6 +9,7 @@ import { StarredMessagesPanel } from './StarredMessagesPanel';
 import { SearchResult } from '../../lib/search/search';
 import { ExportModal, ExportOptions } from '../export/ExportModal';
 import { generatePdfArchive } from '../../lib/pdf/pdfGenerator';
+import { generateHtmlArchive } from '../../lib/html-export/htmlGenerator';
 import { ThemeSettingsModal } from './ThemeSettingsModal';
 import { AnalyticsModal } from './AnalyticsModal';
 import { toggleMessageStarred } from '../../lib/storage/archive-repository';
@@ -160,7 +161,11 @@ export function ChatViewer({
       ...parsedChat,
       messages,
     };
-    await generatePdfArchive(chatToExport, options);
+    if (options.exportFormat === 'html') {
+      await generateHtmlArchive(chatToExport, options);
+    } else {
+      await generatePdfArchive(chatToExport, options);
+    }
   };
 
   const currentChatWithMessages = {

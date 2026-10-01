@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, FileText, Loader2, AlertCircle, Star } from 'lucide-react';
+import { X, FileText, Loader2, AlertCircle, Star, Globe } from 'lucide-react';
 import { ParsedChat } from '../../types/chat';
 
 export interface ExportOptions {
+  exportFormat?: 'pdf' | 'html';
   dateRange: 'all' | 'custom';
   fromDate: string;
   toDate: string;
@@ -20,6 +21,7 @@ interface ExportModalProps {
 }
 
 export function ExportModal({ chat, isOpen, onClose, onExport, initialStarredOnly = false }: ExportModalProps) {
+  const [exportFormat, setExportFormat] = useState<'pdf' | 'html'>('pdf');
   const [dateRange, setDateRange] = useState<'all' | 'custom'>('all');
   const [fromDate, setFromDate] = useState('');
   const [toDate, setToDate] = useState('');
@@ -91,10 +93,11 @@ export function ExportModal({ chat, isOpen, onClose, onExport, initialStarredOnl
         includeImages,
         includeConversationInfo: includeInfo,
         starredOnly,
+        exportFormat,
       });
       onClose(); // Close on success
     } catch (err: any) {
-      console.error('PDF Export Error:', err);
+      console.error('Export Error:', err);
       setError(`Failed: ${err?.message || 'Unknown error'}`);
     } finally {
       setIsExporting(false);
@@ -110,10 +113,12 @@ export function ExportModal({ chat, isOpen, onClose, onExport, initialStarredOnl
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 dark:border-[#222e35] bg-slate-50/80 dark:bg-[#202c33]">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 bg-blue-100 dark:bg-blue-950/60 text-blue-700 dark:text-blue-400 rounded-lg">
-              <FileText size={18} />
+            <div className="p-1.5 bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 rounded-lg">
+              {exportFormat === 'html' ? <Globe size={18} /> : <FileText size={18} />}
             </div>
-            <h2 className="text-base font-semibold text-slate-800 dark:text-[#e9edef]">Export PDF Archive</h2>
+            <h2 className="text-base font-semibold text-slate-800 dark:text-[#e9edef]">
+              {exportFormat === 'html' ? 'Export Offline Webpage' : 'Export PDF Archive'}
+            </h2>
           </div>
           <button
             onClick={onClose}
@@ -125,13 +130,47 @@ export function ExportModal({ chat, isOpen, onClose, onExport, initialStarredOnl
         </div>
 
         {/* Body */}
-        <div className="p-5 flex flex-col gap-5">
+        <div className="p-5 flex flex-col gap-4">
           {error && (
             <div className="flex items-start gap-2 bg-red-50 dark:bg-red-950/50 text-red-700 dark:text-red-300 p-3 rounded-xl border border-red-100 dark:border-red-900/50 text-sm">
               <AlertCircle size={16} className="shrink-0 mt-0.5" />
               <p>{error}</p>
             </div>
           )}
+
+          {/* Format Selector */}
+          <div className="space-y-1.5">
+            <h3 className="text-xs font-bold text-slate-700 dark:text-[#e9edef] uppercase tracking-wider">
+              Export Format
+            </h3>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => setExportFormat('pdf')}
+                className={`flex items-center justify-center gap-2 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
+                  exportFormat === 'pdf'
+                    ? 'border-emerald-500 bg-emerald-50/80 text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-600 ring-1 ring-emerald-500'
+                    : 'border-slate-200 dark:border-[#2a3942] bg-white dark:bg-[#202c33] text-slate-600 dark:text-[#8696a0] hover:bg-slate-50 dark:hover:bg-[#2a3942]'
+                }`}
+              >
+                <FileText size={15} />
+                <span>PDF Document</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setExportFormat('html')}
+                className={`flex items-center justify-center gap-2 p-2.5 rounded-xl border text-xs font-semibold transition-all ${
+                  exportFormat === 'html'
+                    ? 'border-emerald-500 bg-emerald-50/80 text-emerald-900 dark:bg-emerald-950/50 dark:text-emerald-300 dark:border-emerald-600 ring-1 ring-emerald-500'
+                    : 'border-slate-200 dark:border-[#2a3942] bg-white dark:bg-[#202c33] text-slate-600 dark:text-[#8696a0] hover:bg-slate-50 dark:hover:bg-[#2a3942]'
+                }`}
+              >
+                <Globe size={15} />
+                <span>Offline HTML</span>
+              </button>
+            </div>
+          </div>
 
           {/* Starred Messages Filter Option */}
           {starredCount > 0 && (
@@ -263,10 +302,10 @@ export function ExportModal({ chat, isOpen, onClose, onExport, initialStarredOnl
             {isExporting ? (
               <>
                 <Loader2 size={16} className="animate-spin" />
-                <span>Generating PDF...</span>
+                <span>{exportFormat === 'html' ? 'Compiling HTML...' : 'Generating PDF...'}</span>
               </>
             ) : (
-              <span>Download PDF</span>
+              <span>{exportFormat === 'html' ? 'Download Offline HTML' : 'Download PDF'}</span>
             )}
           </button>
         </div>
