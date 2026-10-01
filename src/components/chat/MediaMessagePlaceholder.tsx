@@ -11,6 +11,7 @@ import {
   X,
   AlertTriangle
 } from 'lucide-react';
+import { AudioVoiceNotePlayer } from './AudioVoiceNotePlayer';
 
 interface MediaMessagePlaceholderProps {
   type: MessageType;
@@ -177,43 +178,15 @@ export function MediaMessagePlaceholder({
     );
   }
 
-  // Audio with URL
+  // Audio with URL - Rich WhatsApp Voice Note Player
   if (type === 'audio' && mediaUrl && mediaStatus === 'available') {
     return (
-      <div className="flex flex-col gap-2 rounded-2xl bg-slate-50/90 dark:bg-[#182229] border border-slate-200/80 dark:border-[#2a3942] p-3 min-w-[260px] max-w-sm shadow-xs transition-colors">
-        <div className="flex items-center gap-2.5">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-500 text-white shadow-xs">
-            <Mic size={18} />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-xs font-semibold text-slate-900 dark:text-[#e9edef] truncate">
-              {fileName || 'Voice Note'}
-            </p>
-            {mediaSize && (
-              <p className="text-[10px] text-slate-500 dark:text-[#8696a0]">{formatBytes(mediaSize)}</p>
-            )}
-          </div>
-        </div>
-        
-        {audioError ? (
-           <div className="mt-2 flex flex-col gap-2 text-center text-xs text-slate-500 dark:text-[#8696a0] bg-white dark:bg-[#202c33] p-3 rounded-xl border border-slate-100 dark:border-[#2a3942]">
-             <p>This audio file cannot be played in your browser.</p>
-             <a
-              href={mediaUrl}
-              download={fileName || 'audio'}
-              className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-slate-100 dark:bg-[#111b21] py-1.5 text-slate-700 dark:text-[#e9edef] hover:bg-slate-200 dark:hover:bg-[#2a3942] transition-colors"
-             >
-               <Download size={14} /> Download audio
-             </a>
-           </div>
-        ) : (
-          <audio controls src={mediaUrl} className="w-full h-8" preload="metadata" onError={() => setAudioError(true)} />
-        )}
-
-        {caption && (
-          <p className="text-xs text-slate-800 dark:text-[#e9edef] leading-relaxed break-words">{caption}</p>
-        )}
-      </div>
+      <AudioVoiceNotePlayer
+        mediaUrl={mediaUrl}
+        fileName={fileName}
+        mediaSize={mediaSize}
+        caption={caption}
+      />
     );
   }
 
