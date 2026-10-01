@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="waGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#25D366" />
+      <stop offset="100%" stop-color="#075E54" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.25" />
+    </filter>
+  </defs>
+
+  <!-- Background rounded rectangle -->
+  <rect width="512" height="512" rx="110" fill="url(#waGrad)" />
+
+  <!-- Chat Bubble Silhouette -->
+  <g filter="url(#shadow)" transform="translate(40, 40) scale(0.84)">
+    <path
+      d="M256,40 C136.7,40 40,136.7 40,256 C40,298.5 52.3,338.4 73.7,372.3 L42,472 L144.3,441.9 C177.3,461.1 215.4,472 256,472 C375.3,472 472,375.3 472,256 C472,136.7 375.3,40 256,40 Z"
+      fill="#ffffff"
+    />
+
+    <!-- Archive Box Symbol inside Bubble -->
+    <path
+      d="M170,180 L342,180 C352,180 360,188 360,198 L360,224 C360,230 355,236 348,236 L164,236 C157,236 152,230 152,224 L152,198 C152,188 160,180 170,180 Z"
+      fill="#00a884"
+    />
+    <path
+      d="M165,248 L347,248 L335,338 C334,346 327,352 319,352 L193,352 C185,352 178,346 177,338 L165,248 Z"
+      fill="#075E54"
+      opacity="0.9"
+    />
+    <!-- Down Arrow for Archive -->
+    <path
+      d="M236,270 L276,270 L276,295 L296,295 L256,335 L216,295 L236,295 Z"
+      fill="#ffffff"
+    />
+  </g>
+</svg>
