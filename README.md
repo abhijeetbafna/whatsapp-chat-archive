@@ -1,4 +1,4 @@
-# WhatsApp Chat Archive
+# WhatsApp ChatBook
 
 A fast, private, client-side web application that transforms exported WhatsApp chats (`.zip` or `.txt`) into structured, readable, and searchable conversations in a familiar messaging interface.
 
@@ -14,6 +14,11 @@ A fast, private, client-side web application that transforms exported WhatsApp c
   - Human-friendly calendar date dividers (`Today`, `Yesterday`, `15 July 2026`).
   - Safe, clickable external hyperlinks.
   - Virtualized message rendering for responsive performance on large conversations (50,000+ messages).
+- **Starred Messages & Bookmarks**: Star important messages and filter them instantly.
+- **Voice Note Player**: Interactive Web Audio API waveform visualization with 1x, 1.5x, 2x playback speed controls.
+- **Analytics & Insights**: Interactive dashboard displaying activity heatmaps, conversation streaks, monthly volume timelines, top emojis, and word frequencies.
+- **Standalone Offline HTML Export**: Export full chats to single-file `.html` documents with embedded base64 media for standalone offline reading.
+- **Progressive Web App (PWA)**: Install directly on desktop or mobile for instant 100% offline access.
 - **Rich Media & Lightbox**:
   - In-browser image lightbox with keyboard shortcuts.
   - Native video and audio playback.
@@ -62,10 +67,10 @@ A fast, private, client-side web application that transforms exported WhatsApp c
 
 ```bash
 # Clone repository
-git clone https://github.com/abhijeetbafna/whatsapp-chat-archive.git
+git clone https://github.com/abhijeetbafna/whatsapp-chatbook.git
 
 # Navigate into directory
-cd whatsapp-chat-archive
+cd whatsapp-chatbook
 
 # Install dependencies
 npm install

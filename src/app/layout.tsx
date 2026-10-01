@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "WhatsApp Chat Archive",
+  title: "WhatsApp ChatBook",
   description: "Import your WhatsApp exports and turn them into private, searchable, media-rich conversation archives.",
   manifest: "/manifest.webmanifest",
   icons: {

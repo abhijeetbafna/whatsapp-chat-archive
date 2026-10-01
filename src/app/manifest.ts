@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next';
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'WhatsApp Chat Archive & Viewer',
-    short_name: 'Chat Archive',
-    description: 'Private, offline, client-side WhatsApp chat archive viewer and library.',
+    name: 'WhatsApp ChatBook',
+    short_name: 'ChatBook',
+    description: 'Private, offline, client-side WhatsApp chat viewer and memory library.',
     start_url: '/',
     display: 'standalone',
     orientation: 'any',

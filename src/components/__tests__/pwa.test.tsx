@@ -13,8 +13,8 @@ describe('PWA Offline & Installation Suite', () => {
   it('Test 1 — Manifest configuration contains valid PWA specification', () => {
     const data = manifest();
 
-    expect(data.name).toBe('WhatsApp Chat Archive & Viewer');
-    expect(data.short_name).toBe('Chat Archive');
+    expect(data.name).toBe('WhatsApp ChatBook');
+    expect(data.short_name).toBe('ChatBook');
     expect(data.display).toBe('standalone');
     expect(data.start_url).toBe('/');
     expect(data.background_color).toBe('#0c1317');
