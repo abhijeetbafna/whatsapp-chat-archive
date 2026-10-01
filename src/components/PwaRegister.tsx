@@ -58,7 +58,7 @@ export function PwaRegister() {
         </div>
         <div className="min-w-0">
           <p className="text-xs font-bold text-slate-900 dark:text-[#e9edef] truncate">
-            Install Chat Archive
+            Install ChatBook
           </p>
           <p className="text-[11px] text-slate-500 dark:text-[#8696a0] truncate">
             Use offline like a desktop app

@@ -54,7 +54,7 @@ export function AnalyticsModal({ chat, isOpen, onClose }: AnalyticsModalProps) {
                 Conversation Analytics & Insights
               </h2>
               <p className="text-xs text-slate-500 dark:text-[#8696a0] truncate">
-                {chat.title || 'Chat Archive'} • {analytics.totalMessages.toLocaleString()} messages analyzed
+                {chat.title || 'WhatsApp ChatBook'} • {analytics.totalMessages.toLocaleString()} messages analyzed
               </p>
             </div>
           </div>

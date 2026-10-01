@@ -13,7 +13,7 @@ export default function Home() {
             <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
               <FileArchive size={20} />
             </div>
-            <span className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e9edef]">WhatsApp Chat Archive</span>
+            <span className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e9edef]">WhatsApp ChatBook</span>
           </div>
           <nav className="flex items-center gap-3">
             <Link
@@ -177,7 +177,7 @@ export default function Home() {
         <div className="container mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-4 text-center sm:px-6 md:flex-row md:text-left lg:px-8">
           <div className="flex items-center gap-2 text-slate-900 dark:text-[#e9edef]">
             <FileArchive size={20} />
-            <span className="font-semibold">WhatsApp Chat Archive</span>
+            <span className="font-semibold">WhatsApp ChatBook</span>
           </div>
           <p className="text-sm text-slate-500 dark:text-[#8696a0] max-w-md md:text-right">
             This is an independent third-party archive tool and is not affiliated with or endorsed by WhatsApp or Meta.

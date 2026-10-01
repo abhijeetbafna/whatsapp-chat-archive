@@ -26,7 +26,7 @@ describe('PWA Offline & Installation Suite', () => {
     render(<PwaRegister />);
 
     // Initially install banner should be hidden
-    expect(screen.queryByText(/Install Chat Archive/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Install ChatBook/i)).not.toBeInTheDocument();
 
     // Trigger beforeinstallprompt event
     const promptEvent = new Event('beforeinstallprompt') as any;
@@ -38,7 +38,7 @@ describe('PWA Offline & Installation Suite', () => {
     });
 
     // Now install banner should be visible
-    expect(screen.getByText(/Install Chat Archive/i)).toBeInTheDocument();
+    expect(screen.getByText(/Install ChatBook/i)).toBeInTheDocument();
     expect(screen.getByText(/Use offline like a desktop app/i)).toBeInTheDocument();
 
     // Clicking Install triggers prompt
@@ -60,13 +60,13 @@ describe('PWA Offline & Installation Suite', () => {
       window.dispatchEvent(promptEvent);
     });
 
-    expect(screen.getByText(/Install Chat Archive/i)).toBeInTheDocument();
+    expect(screen.getByText(/Install ChatBook/i)).toBeInTheDocument();
 
     const dismissBtn = screen.getByRole('button', { name: /dismiss install banner/i });
     act(() => {
       fireEvent.click(dismissBtn);
     });
 
-    expect(screen.queryByText(/Install Chat Archive/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/Install ChatBook/i)).not.toBeInTheDocument();
   });
 });

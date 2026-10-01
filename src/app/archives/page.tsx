@@ -181,7 +181,7 @@ function ArchivesContent() {
               <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-white">
                 <FileArchive size={18} />
               </div>
-              <span className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e9edef]">WhatsApp Chat Archive</span>
+              <span className="text-xl font-semibold tracking-tight text-slate-900 dark:text-[#e9edef]">WhatsApp ChatBook</span>
             </div>
           </div>
 
