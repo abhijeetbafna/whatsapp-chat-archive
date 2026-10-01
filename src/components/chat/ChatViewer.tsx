@@ -10,6 +10,7 @@ import { SearchResult } from '../../lib/search/search';
 import { ExportModal, ExportOptions } from '../export/ExportModal';
 import { generatePdfArchive } from '../../lib/pdf/pdfGenerator';
 import { ThemeSettingsModal } from './ThemeSettingsModal';
+import { AnalyticsModal } from './AnalyticsModal';
 import { toggleMessageStarred } from '../../lib/storage/archive-repository';
 
 interface ChatViewerProps {
@@ -49,6 +50,7 @@ export function ChatViewer({
   const [isExportOpen, setIsExportOpen] = useState(false);
   const [isExportStarredOnly, setIsExportStarredOnly] = useState(false);
   const [isThemeModalOpen, setIsThemeModalOpen] = useState(false);
+  const [isAnalyticsOpen, setIsAnalyticsOpen] = useState(false);
   const [filterStarredOnly, setFilterStarredOnly] = useState(false);
   
   const [activeSearchResult, setActiveSearchResult] = useState<SearchResult | null>(null);
@@ -179,6 +181,7 @@ export function ChatViewer({
           onToggleSearch={handleToggleSearch}
           onToggleInfo={handleToggleInfo}
           onToggleStarred={handleToggleStarred}
+          onToggleAnalytics={() => setIsAnalyticsOpen(true)}
           onToggleThemeSettings={() => setIsThemeModalOpen(true)}
           onExportClick={() => {
             setIsExportStarredOnly(false);
@@ -267,6 +270,13 @@ export function ChatViewer({
       <ThemeSettingsModal
         isOpen={isThemeModalOpen}
         onClose={() => setIsThemeModalOpen(false)}
+      />
+
+      {/* Conversation Insights & Analytics Modal */}
+      <AnalyticsModal
+        chat={currentChatWithMessages}
+        isOpen={isAnalyticsOpen}
+        onClose={() => setIsAnalyticsOpen(false)}
       />
     </div>
   );

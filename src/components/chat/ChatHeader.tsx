@@ -11,7 +11,8 @@ import {
   Info,
   Download,
   Sliders,
-  Star
+  Star,
+  BarChart2
 } from 'lucide-react';
 
 interface ChatHeaderProps {
@@ -24,6 +25,7 @@ interface ChatHeaderProps {
   onToggleSearch: () => void;
   onToggleInfo: () => void;
   onToggleStarred: () => void;
+  onToggleAnalytics: () => void;
   onToggleThemeSettings: () => void;
   onExportClick: () => void;
   isSearchOpen: boolean;
@@ -42,6 +44,7 @@ export function ChatHeader({
   onToggleSearch,
   onToggleInfo,
   onToggleStarred,
+  onToggleAnalytics,
   onToggleThemeSettings,
   onExportClick,
   isSearchOpen,
@@ -167,6 +170,16 @@ export function ChatHeader({
           title="Conversation Info"
         >
           <Info size={16} />
+        </button>
+
+        {/* Conversation Analytics & Insights Toggle */}
+        <button
+          onClick={onToggleAnalytics}
+          className="inline-flex items-center justify-center h-8 w-8 rounded-full bg-white dark:bg-[#111b21] text-slate-700 dark:text-[#e9edef] border border-slate-300/80 dark:border-[#222e35] hover:bg-slate-50 dark:hover:bg-[#2a3942] shadow-2xs transition-colors"
+          title="Conversation Analytics & Insights"
+          aria-label="Conversation Analytics & Insights"
+        >
+          <BarChart2 size={16} />
         </button>
 
         {/* Theme & Display Customization Toggle */}
